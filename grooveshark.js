@@ -1,104 +1,29 @@
-//0222a872de599249f6b4eb5ce58c9394
-mp3sites["grooveshark"] = new MP3Site("http://grooveshark.com/#",
-                                "%s",
-                                "chrome://fullfiller/skin/grooveshark.ico",
-                                "Grooveshark"
-                                )
-//mp3sites["grooveshark"].scanAction = window.mediaPage.lookupGrooveshark;
-mp3sites["grooveshark"].scanAction = function lookupGrooveshark(search){
-  var mediaList = window.mediaPage.webView.mediaList;
-  //var metadataService = 
-  //      Components.classes["@songbirdnest.com/Songbird/FileMetadataService;1"]
-  //                .getService(Components.interfaces.sbIFileMetadataService);
-  //var mediaItemsToScan = Cc["@songbirdnest.com/moz/xpcom/threadsafe-array;1"]
-  //                         .createInstance(Ci.nsIMutableArray);
-  
-  grooveshark.getTinySongResults(search,function(songinfo){
-    var properties = {};
-    properties[SBProperties.enableAutoDownload] = "1";
-    properties[SBProperties.downloadButton] = "1|0|0";
-    properties[SBProperties.artistName] = songinfo.artist;
-    properties[SBProperties.trackName] = songinfo.name;
-    properties[SBProperties.albumName] = songinfo.album;
-    properties[mp3sites["grooveshark"].ns+"songID"]=songinfo.id;
-    properties[mp3sites["grooveshark"].ns+"streamKey"]=0;
-    //debug(mp3sites["grooveshark"].ns+"streamKey");
-    //debug("grooveshark: "+songinfo.name+" - "+songinfo.album+" - "+songinfo.artist+"\n");
-    mediaItemsToScan = Cc["@songbirdnest.com/moz/xpcom/threadsafe-array;1"]
-             .createInstance(Ci.nsIMutableArray);
-    uri = "http://listen.grooveshark.com/more.php?music"+
-                "&track="+encodeURIComponent(songinfo.name)+
-                "&artist="+encodeURIComponent(songinfo.artist)+
-                "&songid="+songinfo.id;
-    //debug(uri);
-    //debug("properties: "+properties);
-    //debug(SBProperties.createArray(properties));
-    try{
-    var mediaItem = window.mediaPage._library.createMediaItem(newURI(uri),
-                                      SBProperties.createArray(properties),false);
-    mediaItem.setProperty(mp3sites["grooveshark"].ns+"songID",songinfo.id);
-    mediaItem.setProperty(mp3sites["grooveshark"].ns+"streamKey",0);
-    mediaItem.setProperty(mp3sites["grooveshark"].ns+"streamServer",0);
-    //debug("meidaItem: "+mediaItem);
-    mediaList.add(mediaItem);
-    //debug("item added");
-    }catch(e){
-      debug("e: "+e);
-    }
-    //mediaItemsToScan.appendElement(mediaItem, false);
-    //metadataService.read(mediaItemsToScan)
-  });
-}
+var uuidsvc = require("./uuid");
+require("joose");
+require("joosex-namespace-depended");
+require("hash");
+var xhr = require("./XMLHTTPRequest.js");
 
-mp3sites["grooveshark"].onItemClick = function(item){
-  var ns = this.ns;
-  var streamKey=item.getProperty(ns+"streamKey");
-  //debug("streamKey: "+streamKey);
-  //debug(ns+"streamKey");
-  if (streamKey==0||streamKey==null){
-    var songid = item.getProperty(ns+"songID");
-    //debug("songID: "+songid);
-    grooveshark.getStreamKey(songid,function(song){
-      try{
-        item.setProperty(ns+"streamKey",song.streamKey)
-        item.setProperty(ns+"streamServer",song.streamServer);
-        item.contentSrc = newURI(song.songURL);
-        //debug("songURL: "+song.songURL);
-      }catch(e){
-        //debug("streamkeycallback: "+e);
-      }
-    });
-  }
-  return true;
-}
 
-grooveshark = {
+var grooveshark = {
   clientRevision:"20101012.03",
   session:"",//"9eb808b493d6022e0e2a2e1355011ec1",
   uuid:"",//"E99C3E45-39A9-D6ED-559F-C0C4EF53F446",
   tries:0,
   currentToken:"",
   init: function(){
-    dump("grooveshark init\n");
     //Get UUID for client
-    var uuidGenerator = 
-      Components.classes["@mozilla.org/uuid-generator;1"]
-                .getService(Components.interfaces.nsIUUIDGenerator);
-    var uuid = uuidGenerator.generateUUID();
+    
+    var uuid = uuidsvc.generate();
     var uuidString = uuid.toString();
     grooveshark.uuid = uuidString;
     dump("grooveshark uuid: "+uuidString+"\n");
     
-    var ios = Components.classes["@mozilla.org/network/io-service;1"]
-            .getService(Components.interfaces.nsIIOService);
-    var uri = ios.newURI("http://listen.grooveshark.com/", null, null);
-    var cookieSvc =
-       Components.classes["@mozilla.org/cookieService;1"]
-                 .getService(Components.interfaces.nsICookieService);
-    var cookie = cookieSvc.getCookieString(uri, null);
+    var cookie = false;
     if (cookie){
       var vals = cookie.split(/; */);
-      for each (var kvp in vals){
+      for (var i in vals){
+         var kvp = vals[i];
          var pair = kvp.split('=');
          if (pair[0]=='PHPSESSID'){
              grooveshark.session = pair[1];
@@ -107,72 +32,90 @@ grooveshark = {
       }
     }
 
-    var req=new XMLHttpRequest(); 
+//    console.log(xhr);
+    var req=new xhr.XMLHttpRequest(); 
     req.open("GET","https://listen.grooveshark.com/"); 
     
     //Get Session ID
     req.onreadystatechange = function(ev){
       try{
         if (req.readyState==4 && req.status == 200){
-           var vals = req.getResponseHeader("Set-Cookie").split(/; */);
-           for each (var kvp in vals){
-              var pair = kvp.split('=');
-              dump("pair: "+pair);
-              if (pair[0]=='PHPSESSID'){
-                  grooveshark.session = pair[1];
-                  break;
+           console.log("session stuff");
+           try{
+           var vals = req.getResponseHeader("Set-Cookie")
+           console.log("vals: "+vals);
+           if (vals){
+              vals = vals.split(/; */);
+              for (var i in vals){
+                 var kvp = vals[i];
+                 console.log("kvp: "+kvp);
+                 var pair = kvp.split('=');
+                 dump("pair: "+pair);
+                 if (pair[0]=='PHPSESSID'){
+                     grooveshark.session = pair[1];
+                     console.log("session: "+grooveshark.session);
+                     break;
+                 }
               }
+           } else {
+              grooveshark.session = "7177bdaca3be9a662da1f3ba890e7419";
            }
-           
+           }catch(e){
+                console.log(e);
+           }
         }
       }catch(e){}
     }
-
+    
     req.send(null);
   },
+  getMP3: function(search){
+    this.getTinySongResults(search);
+  },
   getTinySongResults: function(search, songcallback){
-    debug("[tiny] token: "+grooveshark.currentToken+" tries: "+this.tries+"|"+grooveshark.tries+"\n");
+    debug("[tiny] token: "+this.currentToken+" tries: "+this.tries+"|"+this.tries+"\n");
     if (this.currentToken==""&&this.tries<5){
       this.getCommunicationToken(this.getTinySongResults,search,songcallback);
       this.tries++;
       return;
     }
     debug("[tiny] search: "+search);
-    
-    //search=search.replace('%22',"");
-    var post = "q[]="+search+"&q[]=0";
-    var req=new XMLHttpRequest();
-    req.open("POST","http://tinysong.com/?s=s");
-    req.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
-    
-    req.onreadystatechange = function(ev){
-      try{
-        if (req.readyState==4 && req.status==200){
-          var text = req.responseText;
-          var obj = JSON.decode(text);
-          var offset = obj.extraParams.offset;
-          var response = JSON.decode(obj.hostname.resp.raw);
-          var songs = response.result.songs;
-          //print(songs[0].SongName);
-          for each (var res in songs){
-            //var res = result[0];
-            var songdata={};
-            songdata.name=res["SongName"];
-            songdata.artist=res["ArtistName"];
-            songdata.id=res["SongID"];
-            songdata.artistID=res["ArtistID"];
-            songdata.album=res["AlbumName"];
-            //debug("Song: "+res["SongName"]+" - "+res["ArtistName"]+" s-a "+
-            //         res["SongID"]+"-"+res["ArtistID"]);
-            songcallback.apply(grooveshark,[songdata]);
-          }
-        }
-       }catch(e){
-         debug(e);
-       }
-    }
-    
-    req.send(post);
+//    
+//    //search=search.replace('%22',"");
+//    var post = "q[]="+search+"&q[]=0";
+//    var req=new XMLHttpRequest();
+//    req.open("POST","http://tinysong.com/?s=s");
+//    req.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+//    
+//    req.onreadystatechange = function(ev){
+//      try{
+//        if (req.readyState==4 && req.status==200){
+//          var text = req.responseText;
+//          var obj = JSON.decode(text);
+//          var offset = obj.extraParams.offset;
+//          var response = JSON.decode(obj.hostname.resp.raw);
+//          var songs = response.result.songs;
+//          //print(songs[0].SongName);
+//          for (var i in songs){
+//            var res = songs[i]
+//            //var res = result[0];
+//            var songdata={};
+//            songdata.name=res["SongName"];
+//            songdata.artist=res["ArtistName"];
+//            songdata.id=res["SongID"];
+//            songdata.artistID=res["ArtistID"];
+//            songdata.album=res["AlbumName"];
+//            //debug("Song: "+res["SongName"]+" - "+res["ArtistName"]+" s-a "+
+//            //         res["SongID"]+"-"+res["ArtistID"]);
+//            songcallback.apply(grooveshark,[songdata]);
+//          }
+//        }
+//       }catch(e){
+//         debug(e);
+//       }
+//    }
+//    
+//    req.send(post);
   },
   getSearchResults: function(search, songcallback){
     debug("token: "+this.currentToken+" tries: "+this.tries);
@@ -219,7 +162,8 @@ grooveshark = {
                 return;
               }
               var result=obj["result"]["result"];
-              for each (var res in result){
+              for (var i in result){
+                var res = result[i];
                 //var res = result[0];
                 var songdata={};
                 songdata.name=res["SongName"];
@@ -282,22 +226,11 @@ grooveshark = {
   },
   getCommunicationToken: function(callback,arg1,arg2){
     dump("getCommunicatoin Token: "+grooveshark.tries+"\n");
-    var req=new XMLHttpRequest();
+    var req=new xhr.XMLHttpRequest();
     req.open("POST","https://cowbell.grooveshark.com/more.php");
     req.setRequestHeader('Content-Type', "application/json");
     debug("get communication token");
     req.setRequestHeader('Cookie',"PHPSESSID="+grooveshark.session);
-    /*
-     {"header":{"
-     privacy":0,
-     "uuid":"333541AA-EC2B-7C92-7C56-C0B6E4FDABAE",
-     "client":"gslite",
-     "session":"9eb808b493d6022e0e2a2e1355011ec1",
-     "clientRevision":"20101012.03"},
-     "parameters":{"secretKey":"40bffc83262a5a7614146847c97675c4"},
-     "method":"getCommunicationToken"}
-     
-    */
     var postdata={
       "header":
       {
@@ -312,7 +245,8 @@ grooveshark = {
       },
       "method":"getCommunicationToken"
     }
-    var post = JSON.encode(postdata);
+    debug("postdata stuff");
+    var post = JSON.stringify(postdata);
     debug("Post: "+post);
     var hasloaded=false;
     req.onreadystatechange = function(ev){
@@ -322,7 +256,7 @@ grooveshark = {
         if (req.readyState==4 && status==200&&!hasloaded){
           if (req.responseText&&req.responseText!=""){
             debug("gct response: "+req.responseText);
-            var obj=JSON.decode(req.responseText);
+            var obj=JSON.parse(req.responseText);
             var result=obj["result"];
             debug("result: "+result);
             if (result){
@@ -369,7 +303,7 @@ grooveshark = {
     return postdata;
   },
   _sendPost: function(method,parameters,callback,service){
-    var post = JSON.encode(this._getPostData(method,parameters));
+    var post = JSON.parse(this._getPostData(method,parameters));
     var req=new XMLHttpRequest();
     if (!service)
       service="more";
@@ -416,35 +350,11 @@ GrooveSong.prototype.__defineGetter__("songURL", function() {
   return "http://"+this.ip+"/stream.php?streamKey="+this.streamKey;  
 });
 function doHash(str,htype){
-  var converter =
-    Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
-      createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-  
-  // we use UTF-8 here, you can choose other encodings.
-  converter.charset = "UTF-8";
-  // result is an out parameter,
-  // result.value will contain the array length
-  var result = {};
-  // data is an array of bytes
-  var data = converter.convertToByteArray(str, result);
-  var ch = Components.classes["@mozilla.org/security/hash;1"]
-                     .createInstance(Components.interfaces.nsICryptoHash);
-  if (htype=="MD5")
-    ch.init(ch.MD5);
-  else
-    ch.init(ch.SHA1);
-  ch.update(data, data.length);
-  var hash = ch.finish(false);
-  
-  // return the two-digit hexadecimal code for a byte
-  function toHexString(charCode)
-  {
-    return ("0" + charCode.toString(16)).slice(-2);
+  if (htype=="MD5"){
+     return Hash.md5(str); 
+  } else {
+     return Hash.sha1(text);
   }
-  
-  // convert the binary hash data to a hex string.
-  var s = [toHexString(hash.charCodeAt(i)) for (i in hash)].join("");
-  return s;
 }
 function randChars(){
   var chars="1234567890abcdef";
@@ -454,10 +364,15 @@ function randChars(){
   }
   return s;
 }
+function dump(str){
+   console.log(str);   
+}
+function debug(str){
+   console.log(str);   
+}
 
-grooveshark.init();
+exports.groove = grooveshark;
 
-/*
- Notes:
- 
-*/
+//exports.groove.init();
+
+//exports.groove = "test";

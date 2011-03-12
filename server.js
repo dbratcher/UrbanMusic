@@ -3,7 +3,8 @@ var sys = require("sys"),
     url = require("url"),
     path = require("path"),
     fs = require("fs"),
-    qs = require("querystring");
+    qs = require("querystring"),
+    grooveshark = require("./grooveshark");
 
 http.createServer(function(request, response) {
     var urlstub = request.url;
