@@ -62,7 +62,7 @@ var urbanmusic = {
           data: data,
           dataType: "json",
           success: function(data){
-            
+            $.mobile.changePage("listen");
           },
           error: function(){
             

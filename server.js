@@ -8,11 +8,14 @@ http.createServer(function(request, response) {
     var urlstub = request.url;
     if (urlstub=="/")
         urlstub = "index.html";
-    
     console.log("urlstub: "+urlstub);
     var uri = url.parse(urlstub).pathname;
     console.log("uri: "+uri);
-    
+    if(uri=="/listen"){
+	console.log("Handling listen stuff");
+	
+    }
+    else{
     
     var filename = path.join(process.cwd(), uri);
 
@@ -28,6 +31,9 @@ http.createServer(function(request, response) {
 
     	fs.readFile(filename, "binary", function(err, file) {
       	    console.log("file exists");
+		if(filename.match(/\.html$/)){
+			contenttype = "text/html";
+		}
     		    if (filename.match(/\.js$/)){
     		      contenttype = "application/javascript"; 
     		    }
@@ -50,6 +56,7 @@ http.createServer(function(request, response) {
     		response.end();
     	});
     });
+}
 }).listen(8080);
 
 sys.puts("Server running at http://localhost:8080/");
