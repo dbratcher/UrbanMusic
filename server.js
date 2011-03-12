@@ -4,7 +4,13 @@ var sys = require("sys"),
     path = require("path"),
     fs = require("fs"),
     qs = require("querystring"),
-    grooveshark = require("./grooveshark");
+    playlist = require("./playlist");
+
+//grooveshark.groove.getMP3("lady gaga");
+//playlist.playlist.search("lady");
+playlist.playlist.getMP3("lady gaga pokerface", function(url){
+   console.log("url: "+url); 
+});
 
 http.createServer(function(request, response) {
     var urlstub = request.url;
