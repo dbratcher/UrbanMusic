@@ -7,6 +7,51 @@ var urbanmusic = {
        list.val(data[0]);
     },
     doload: function(){
+    	YUI().use('scrollview', function(Y) {
+    var scrollView = new Y.ScrollView({
+        id:"scrollview",
+        srcNode: '#scrollview-yearcontent',
+	width: 200,
+        flick: {
+            minDistance:10,
+            minVelocity:0.3,
+            axis: "x"
+        }
+    }); 
+    scrollView.render();
+
+
+    scrollView.on("scrollEnd",function(event){
+        var ev = event.originalEvent;
+        console.log("FIRED");
+    });
+    
+
+    var scrollView = new Y.ScrollView({
+        id:"scrollview",
+        srcNode: '#scrollview-genrecontent',
+        width: 200,
+        flick: {
+            minDistance:10,
+            minVelocity:0.3,
+            axis: "x"
+        }
+    });
+    scrollView.render();
+
+    var scrollView = new Y.ScrollView({
+        id:"scrollview",
+        srcNode: '#scrollview-popcontent',
+        width: 200,
+        flick: {
+            minDistance:10,
+            minVelocity:0.3,
+            axis: "x"
+        }
+    });
+    scrollView.render();
+
+});
         console.log("doload");
         $.ajax({
           url: "years.json",
@@ -66,7 +111,7 @@ var urbanmusic = {
 		console.log(data.artist);
 		console.log(data.track);
 		console.log(data.img);
-		console.lob(data.audio);
+		console.log(data.audio);
             	$.mobile.changePage("listen");
 		$(".artist-title").html(data.artist);
 		$(".track-title").html(data.track);
