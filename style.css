@@ -97,8 +97,7 @@ html, body{
 }
 
 .highlighted {
-	background-color:#fff;
-	margin:16px;	
+	font-weight:bold;
 }
 
 .image-title{

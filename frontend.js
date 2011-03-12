@@ -1,9 +1,11 @@
 var urbanmusic = {
     addToList: function addToList(data,list){
        console.log("add to list");
+       list.append("<li>&nbsp</li>");
        for (var i=0;i<data.length;i++){
            list.append("<li>"+data[i]+"</li>");   
        }
+       list.append("<li>&nbsp</li>");
        list.val(data[0]);
     },
     doload: function(){
@@ -33,12 +35,12 @@ var urbanmusic = {
     			var x = $(this).offset().left;
     			var width = $(this).width();
     			if((value > x-main_x)&&(value<(x-main_x+width))){
-    				console.log($(this).html());
+					console.log($(this).html());
     				$("#year-list").val($(this).html());
     			}
     		});
     		$("#scrollview-yearcontent").val(value);
-    		},500);
+    		},100);
         });
         
     
@@ -69,7 +71,7 @@ var urbanmusic = {
     			}
     		});
     		$("#scrollview-genrecontent").val(value);
-    		},500);
+    		},100);
         });
         
         
@@ -94,9 +96,7 @@ var urbanmusic = {
     		$("#pop-list").children().each(function(index, ele){
     			var x = $(this).offset().left;
     			var width = $(this).width();
-    			$(this).removeClass("highlighted");
     			if((value > x-main_x)&&(value<(x-main_x+width))){
-    				$(this).addClass("highlighted");
     				console.log($(this).html());
     				$("#pop-list").val($(this).html());
     			}
