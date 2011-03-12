@@ -85,7 +85,7 @@ var playlist = {
     rc4Key:"sdf883jsdf22",
     url: "http://www.playlist.com/async/searchbeta/tracks?searchfor=%s&page=%page",
     search: function(txt, callback){
-        var url = this.url.replace(querystring.escape("%s"),txt);
+        var url = this.url.replace("%s",querystring.escape(txt));
         url = url.replace("%page",0);
         console.log("url: "+url);
         var req=new xhr.XMLHttpRequest();
@@ -115,6 +115,9 @@ var playlist = {
                     callback.apply(pl, [song]);
                     return;
                 }
+                if (tracks.length==0){
+                    callback.apply(pl, [null]);
+                }
             } else if (req.readyState==4){
                 console.log("req: "+req.responseText);   
             }
@@ -125,7 +128,10 @@ var playlist = {
     getMP3: function(search, callback){
        var pl = this;
        this.search(search, function(song){
-            callback.apply(pl, [song.url]);
+            if (song)
+                callback.apply(pl, [song.url]);
+            else
+                callback.apply(pl, [null]);
        }); 
     }
 }
