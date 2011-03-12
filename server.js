@@ -37,11 +37,22 @@ http.createServer(function(request, response) {
       		try{
       			if (req.readyState==4 && req.status == 200){	
       				var xml = req.responseText;
+      				//console.log("xml: "+xml);
       				var xml_doc=libxml.parseXmlString(xml);
-      				var track=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[1].text();
-      				var artist=xml_doc.root().childNodes()[1].childNodes()[1].
+      				var track="",artist="",img="";
+      				try{
+      				track=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[1].text();
+      				}catch(e){console.log("trackerr");}
+      				console.log(track);
+      				try{
+      				artist=xml_doc.root().childNodes()[1].childNodes()[1].
       				      childNodes()[11].childNodes()[1].text();
-      				var img=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[19].text();
+      				}catch(e){console.log("artist");}
+      				console.log(artist);
+      				try{
+      				img=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[19].text();
+      				}catch(e){console.log("img");}
+      				console.log(img);
       				console.log(track+" by "+artist+" with image:"+img);
       				
       				playlist.playlist.getMP3(track+" "+artist, function(url){
@@ -87,11 +98,13 @@ http.createServer(function(request, response) {
 		if(filename.match(/\.html$/)){
 			contenttype = "text/html";
 		}
-    		    if (filename.match(/\.js$/)){
-    		      contenttype = "application/javascript"; 
-    		    }
-		if (filename.match(/\.css$/)){
+	    if (filename.match(/\.js$/)){
+	      contenttype = "application/javascript"; 
+	    }
+	    if (filename.match(/\.css$/)){
 			contenttype = "text/css";
+		} else if (filename.match(/\.jpg$/)){
+		    contenttype = "image/jpeg"; 
 		}
     		if(err) {
     		    console.log("err sending file");
@@ -103,7 +116,7 @@ http.createServer(function(request, response) {
     			return;
     		}
             console.log("sent file: ");
-            console.log(file);
+            //console.log(file);
     		response.writeHead(200, {"Content-Type": contenttype});
     		response.write(file, "binary");
     		response.end();
