@@ -126,7 +126,7 @@ var urbanmusic = {
           }
         });
       
-	$.ajax({
+	   $.ajax({
           url: "pop.json",
           dataType: "json",
           success: function(data){
@@ -140,7 +140,13 @@ var urbanmusic = {
             urbanmusic.listen);
         $(".listen-button").bind("touch click",
             urbanmusic.randomize);
-            
+        
+        $(".back-button").bind("click",function(){
+           $.mobile.changePage("randomize"); 
+        });
+        $(".next-button").bind("click",function(){
+           urbanmusic.listen();
+        });
         setTimeout(function(){
             if ($.mobile.activePage.attr("id")!="randomize")
                 $.mobile.changePage("randomize");
@@ -176,6 +182,9 @@ var urbanmusic = {
             	$.mobile.changePage("listen");
         		$(".artist-title").html(data.artist);
         		$(".track-title").html(data.track);
+        		if (data.img == ""){
+        		    data.img = "no_aa.jpg"; 
+        		}
         		$(".image-title").html("<img src="+data.img+"></img>");	
         		$(".audio-title").html('<audio id="audio-ele" src="'+data.audio+"&.mp3"+'" controls="controls" autoplay></audio>');
         		setTimeout(function(){
