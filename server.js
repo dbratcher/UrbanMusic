@@ -2,7 +2,8 @@ var sys = require("sys"),
     http = require("http"),
     url = require("url"),
     path = require("path"),
-    fs = require("fs");
+    fs = require("fs"),
+    qs = require("querystring");
 
 http.createServer(function(request, response) {
     var urlstub = request.url;
@@ -12,8 +13,23 @@ http.createServer(function(request, response) {
     var uri = url.parse(urlstub).pathname;
     console.log("uri: "+uri);
     if(uri=="/listen"){
+	var query=qs.parse(urlstub.substring(uri.length+1));
 	console.log("Handling listen stuff");
+	var data = {};
+	data.method = "tag.gettoptracks"
+	data.tag = query.genre;
+	data.api_key="d68be9970d20265eaad5ef4c92b21fcc";
 	
+	$.ajax({
+		url: "http://ws.audioscrobbler.com/2.0/",
+		data: data,
+		dataType: "json",
+		success: function(data){
+			console.log(data);
+		},
+		error: function(){
+		}
+	});
     }
     else{
     

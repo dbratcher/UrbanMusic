@@ -54,7 +54,7 @@ var urbanmusic = {
     listen: function(){
         var data = {};
         data.genre = $("#genre-list").val();
-        data.years = $("#years-list").val();
+        data.years = $("#year-list").val();
 	data.pop = $("#pop-list").val();
         
         $.ajax({
