@@ -100,23 +100,26 @@ var urbanmusic = {
         var data = {};
         data.genre = $("#genre-list").val();
         data.years = $("#year-list").val();
-	data.pop = $("#pop-list").val();
+	    data.pop = $("#pop-list").val();
         
         $.ajax({
           url: "listen",
           data: data,
           dataType: "json",
           success: function(data){
-		console.log("returned");
-		console.log(data.artist);
-		console.log(data.track);
-		console.log(data.img);
-		console.log(data.audio);
+        		console.log("returned");
+        		console.log(data.artist);
+        		console.log(data.track);
+        		console.log(data.img);
+        		console.log(data.audio);
             	$.mobile.changePage("listen");
-		$(".artist-title").html(data.artist);
-		$(".track-title").html(data.track);
-		$(".image-title").html("<img src="+data.img+"></img>");	
-		$(".audio-title").html("<audio src="+data.audio+"></audio>");
+        		$(".artist-title").html(data.artist);
+        		$(".track-title").html(data.track);
+        		$(".image-title").html("<img src="+data.img+"></img>");	
+        		$(".audio-title").html('<audio id="audio-ele" src="'+data.audio+"&.mp3"+'" controls="controls" autoplay></audio>');
+        		setTimeout(function(){
+        		  document.getElementById("audio-ele").play();
+        		},100);
           },
           error: function(){
             

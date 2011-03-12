@@ -10,9 +10,7 @@ var sys = require("sys"),
 
 //grooveshark.groove.getMP3("lady gaga");
 //playlist.playlist.search("lady");
-playlist.playlist.getMP3("lady gaga pokerface", function(url){
-   console.log("url: "+url); 
-});
+
 
 
 http.createServer(function(request, response) {
@@ -45,15 +43,20 @@ http.createServer(function(request, response) {
       				      childNodes()[11].childNodes()[1].text();
       				var img=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[19].text();
       				console.log(track+" by "+artist+" with image:"+img);
-      				var data={};
-      				data.track=track;
-      				data.artist=artist;
-      				data.img=img;
       				
-      				response.writeHead(200,{"Content-Type":"application/json"});
-      				response.write(JSON.stringify(data));
-      				response.end();
-      				console.log("returning");
+      				playlist.playlist.getMP3(track+" "+artist, function(url){
+                        var data={};
+        				data.track=track;
+        				data.artist=artist;
+        				data.img=img;
+        				data.audio=url;
+        				response.writeHead(200,{"Content-Type":"application/json"});
+        				response.write(JSON.stringify(data));
+        				response.end();
+        				console.log("returning");
+                    });
+      				
+      				
       				return;
       			}
       		}
