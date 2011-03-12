@@ -42,7 +42,7 @@ http.createServer(function(request, response) {
     		}
             console.log("sent file: ");
             console.log(file);
-    		response.writeHead(500, {"Content-Type": contenttype});
+    		response.writeHead(200, {"Content-Type": contenttype});
     		response.write(file, "binary");
     		response.end();
     	});
