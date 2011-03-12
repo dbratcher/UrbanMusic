@@ -7,51 +7,52 @@ var urbanmusic = {
        list.val(data[0]);
     },
     doload: function(){
+        
     	YUI().use('scrollview', function(Y) {
-    var scrollView = new Y.ScrollView({
-        id:"scrollview",
-        srcNode: '#scrollview-yearcontent',
-	width: 200,
-        flick: {
-            minDistance:10,
-            minVelocity:0.3,
-            axis: "x"
-        }
-    }); 
-    scrollView.render();
-
-
-    scrollView.on("scrollEnd",function(event){
-        var ev = event.originalEvent;
-        console.log("FIRED");
-    });
-    
-
-    var scrollView = new Y.ScrollView({
-        id:"scrollview",
-        srcNode: '#scrollview-genrecontent',
-        width: 200,
-        flick: {
-            minDistance:10,
-            minVelocity:0.3,
-            axis: "x"
-        }
-    });
-    scrollView.render();
-
-    var scrollView = new Y.ScrollView({
-        id:"scrollview",
-        srcNode: '#scrollview-popcontent',
-        width: 200,
-        flick: {
-            minDistance:10,
-            minVelocity:0.3,
-            axis: "x"
-        }
-    });
-    scrollView.render();
-
-});
+        var scrollView = new Y.ScrollView({
+            id:"scrollview",
+            srcNode: '#scrollview-yearcontent',
+       	    width: 200,
+            flick: {
+                   minDistance:10,
+                   minVelocity:0.3,
+                   axis: "x"
+               }
+           }); 
+           scrollView.render();
+       
+       
+           scrollView.on("scrollEnd",function(event){
+               var ev = event.originalEvent;
+               console.log("FIRED");
+           });
+           
+       
+           var scrollView = new Y.ScrollView({
+               id:"scrollview",
+               srcNode: '#scrollview-genrecontent',
+               width: 200,
+               flick: {
+                   minDistance:10,
+                   minVelocity:0.3,
+                   axis: "x"
+               }
+           });
+           scrollView.render();
+       
+           var scrollView = new Y.ScrollView({
+               id:"scrollview",
+               srcNode: '#scrollview-popcontent',
+               width: 200,
+               flick: {
+                   minDistance:10,
+                   minVelocity:0.3,
+                   axis: "x"
+               }
+           });
+           scrollView.render();
+       
+        });
         console.log("doload");
         $.ajax({
           url: "years.json",
@@ -85,6 +86,11 @@ var urbanmusic = {
             urbanmusic.listen);
         $(".listen-button").bind("touch click",
             urbanmusic.randomize);
+            
+        setTimeout(function(){
+            if ($.mobile.activePage.attr("id")!="randomize")
+                $.mobile.changePage("randomize");
+        },0);
     },
     /*
         set random arbitrary values 
@@ -102,6 +108,7 @@ var urbanmusic = {
         data.years = $("#year-list").val();
 	    data.pop = $("#pop-list").val();
         
+        $.mobile.pageLoading();
         $.ajax({
           url: "listen",
           data: data,
@@ -120,6 +127,10 @@ var urbanmusic = {
         		setTimeout(function(){
         		  document.getElementById("audio-ele").play();
         		},100);
+        		setTimeout(function(){
+        		  document.getElementById("audio-ele").play();
+        		},3000);
+        		$.mobile.pageLoading(true);
           },
           error: function(){
             

@@ -1,3 +1,30 @@
+.header{
+    height: 35px;
+    vertical-align: middle;
+    font-size: 1.4em;
+}
+
+center {
+    height: 100%;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+}
+
+.ui-content{
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+}
 .footer{
     display: -webkit-box;
     -webkit-box-orient: horizontal;
@@ -19,7 +46,13 @@
 }
 
 .hbutton{
-    display: inline;
+    display: inline-block;
+    max-width: 100px;
+    width: 100px;
+    vertical-align: middle;
+    margin-left: 10px;
+    margin-right: 10px;
+    /*border: 1px solid gray;*/
 }
 
 html, body{
