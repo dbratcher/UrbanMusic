@@ -158,6 +158,9 @@ var urbanmusic = {
         $(".randomize-button").bind("click",function(){
            urbanmusic.randomize();   
         });
+        $("#audio-ele").bind("ended",function(){
+           console.log("ended"); 
+        });
         setTimeout(function(){
             if ($.mobile.activePage.attr("id")!="randomize")
                 $.mobile.changePage("randomize");
@@ -168,6 +171,8 @@ var urbanmusic = {
     */
     randomize: function(){
         try{
+        if (!this.years || !this.genre || !this.pop)
+            return;
         var val = this.years[Math.floor(Math.random()*this.years.length)];
         console.log("val: "+val);
         $("#year-list").val(val);
@@ -233,21 +238,30 @@ var urbanmusic = {
         		console.log(data.track);
         		console.log(data.img);
         		console.log(data.audio);
-            	$.mobile.changePage("listen");
-        		$(".artist-title").html(data.artist);
-        		$(".track-title").html(data.track);
-        		if (data.img == ""){
-        		    data.img = "no_aa.jpg"; 
+        		if (!data.audio){
+        		  urbanmusic.listen(); 
+        		} else {
+                	$.mobile.changePage("listen");
+            		$(".artist-title").html(data.artist);
+            		$(".track-title").html(data.track);
+            		if (data.img == ""){
+            		    data.img = "no_aa.jpg"; 
+            		}
+            		$(".image-title").html("<img src="+data.img+"></img>");	
+            		//$(".audio-title").html('<audio id="audio-ele" src="'+data.audio+"&.mp3"+'" controls="controls" autoplay></audio>');
+            		var ae = document.getElementById("audio-ele");
+            		ae.pause();
+            		ae.src = data.audio+"&.mp3";
+            		ae.load();
+            		ae.play();
+            		setTimeout(function(){
+            		  ae.play();
+            		},100);
+            		setTimeout(function(){
+            		  ae.play();
+            		},3000);
+            		$.mobile.pageLoading(true);
         		}
-        		$(".image-title").html("<img src="+data.img+"></img>");	
-        		$(".audio-title").html('<audio id="audio-ele" src="'+data.audio+"&.mp3"+'" controls="controls" autoplay></audio>');
-        		setTimeout(function(){
-        		  document.getElementById("audio-ele").play();
-        		},100);
-        		setTimeout(function(){
-        		  document.getElementById("audio-ele").play();
-        		},3000);
-        		$.mobile.pageLoading(true);
           },
           error: function(){
             

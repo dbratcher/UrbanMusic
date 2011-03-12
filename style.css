@@ -142,5 +142,6 @@ html, body{
 }
 .hbutton{
     font-size: 1.3em;
-    width: 125px;
+    width: 125px !important;
+    min-width: 125px !important;
 }
