@@ -1,4 +1,10 @@
 var urbanmusic = {
+    years: [],
+    genre: [],
+    pop: [],
+    yearscroll: null,
+    genrescroll: null,
+    popscroll: null,
     addToList: function addToList(data,list){
        console.log("add to list");
        for (var i=0;i<data.length;i++){
@@ -11,7 +17,7 @@ var urbanmusic = {
     	YUI().use('scrollview', function(Y) {
 
         var scrollView = new Y.ScrollView({
-            id:"scrollview",
+            id:"years-scrollview",
             srcNode: '#scrollview-yearcontent',
     	width: 200,
             flick: {
@@ -22,7 +28,7 @@ var urbanmusic = {
             bounce:1
             });
         scrollView.render();
-    
+        urbanmusic.yearscroll = scrollView;
     
         scrollView.on("scrollXChange",function(event){
         	setTimeout(function(){
@@ -42,8 +48,8 @@ var urbanmusic = {
         });
         
     
-        var scrollView = new Y.ScrollView({
-            id:"scrollview",
+        scrollView = new Y.ScrollView({
+            id:"genre-scrollview",
             srcNode: '#scrollview-genrecontent',
             width: 200,
             flick: {
@@ -53,7 +59,8 @@ var urbanmusic = {
             }
         });
         scrollView.render();
-    
+        urbanmusic.genrescroll = scrollView;
+        
         scrollView.on("scrollXChange",function(event){
         	setTimeout(function(){
             var ev = event.originalEvent;
@@ -72,8 +79,8 @@ var urbanmusic = {
         });
         
         
-        var scrollView = new Y.ScrollView({
-            id:"scrollview",
+        scrollView = new Y.ScrollView({
+            id:"pop-scrollview",
             srcNode: '#scrollview-popcontent',
             width: 200,
             flick: {
@@ -83,7 +90,7 @@ var urbanmusic = {
             }
         });
         scrollView.render();
-    
+        urbanmusic.popscroll = scrollView;
     
         scrollView.on("scrollXChange",function(event){
         	setTimeout(function(){
@@ -112,6 +119,7 @@ var urbanmusic = {
           success: function(data){
             var list = $("#year-list");
             urbanmusic.addToList(data,list);
+            urbanmusic.years = data;
           }
         });
         
@@ -121,6 +129,7 @@ var urbanmusic = {
           success: function(data){
             var list = $("#genre-list");
             urbanmusic.addToList(data,list);
+            urbanmusic.genre = data;
           }
         });
       
@@ -130,6 +139,7 @@ var urbanmusic = {
           success: function(data){
             var list = $("#pop-list");
             urbanmusic.addToList(data,list);
+            urbanmusic.pop = data;
           }
         });
 
@@ -157,7 +167,43 @@ var urbanmusic = {
         set random arbitrary values 
     */
     randomize: function(){
-          
+        try{
+        var val = this.years[Math.floor(Math.random()*this.years.length)];
+        console.log("val: "+val);
+        $("#year-list").val(val);
+        $("#year-list").children().each(function(idx){
+           if ($(this).html()==val){
+              console.log("yearscroll: "+urbanmusic.yearscroll);
+              urbanmusic.yearscroll.scrollTo($(this).offset().left
+                -$("#year-scrollview"),0);
+              return false;
+           } 
+        });
+        
+        val = this.genre[Math.floor(Math.random()*this.genre.length)];
+        $("#genre-list").val(val);
+        $("#genre-list").children().each(function(idx){
+           if ($(this).html()==val){
+
+              urbanmusic.genrescroll.scrollTo($(this).offset().left
+                -$("#genre-scrollview").offset().left,0);
+              return false;
+           } 
+        });
+        
+        val = this.pop[Math.floor(Math.random()*this.pop.length)];
+        $("#pop-list").val(val);
+        $("#pop-list").children().each(function(idx){
+           if ($(this).html()==val){
+              urbanmusic.popscroll.scrollTo($(this).offset().left
+                -$("#pop-scrollview"),0);
+              return false;
+           } 
+        });
+        
+        }catch(e){
+            console.log(e);   
+        }
     },
     /*
         send selected values
