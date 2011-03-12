@@ -1,26 +1,50 @@
-<html>
-  <head>
-    <title>Long polling test</title>
-  </head>
-  
-  <body>
-    <p>Long polling test.</p>
-    <p><textarea id="output"></textarea></p>
-  </body>
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-  <script type="text/javascript">
-    var client = new function() {
-      var _poll = function() {
-        $.get('/jsupdate', function(response) {
-          $('textarea').text(response);
-          _poll();
-        });
-      }
-      
-      $.get('/jsstatus', function(response) {
-        $('textarea').text(response);
-        _poll();
-      });
-    }
-  </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Smashing HTML5!</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href=main.css" type="text/css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
+    <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
+    <script src="frontend.js"></script>
+</head>
+<body id="index" class="home">
+ <div data-role="page" id="randomize">
+    <div data-role="header">
+       Urban Music
+    </div>
+    <div data-role="content">
+        <div class="selectors">
+           <div class="year-selector">
+                <div>Year</div>
+                <ul id="year-list">
+                    
+                </ul>
+           </div>
+           <div class="genre-selector">
+               <div>Genre</div>
+               <ul id="genre-list">
+               
+               </ul>
+           </div>
+           <div class="hacku-selector">
+               <div>Something else</div>
+               <ul id="hacku-list">
+               
+               </ul>
+           </div>
+        </div>
+     </div>
+     <div data-role="footer" class="footer">
+        <div class="randomize-button hbutton">
+            Randomize (shuffle)
+        </div>
+        <div class="listen-button hbutton">
+            Listen
+        </div>
+     </div>
+  </div>
+</body>
 </html>
