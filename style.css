@@ -72,7 +72,7 @@ html, body{
  
 #scrollview-yearcontent li {
     display:inline-block;
-    background-color:#fff;
+    background-color:none;
     margin:8px;
 }
 
@@ -82,7 +82,7 @@ html, body{
 
 #scrollview-genrecontent li {
     display:inline-block;
-    background-color:#fff;
+    background-color:none;
     margin:8px;
 }
 
@@ -92,7 +92,11 @@ html, body{
 
 #scrollview-popcontent li {
     display:inline-block;
-    background-color:#fff;
+    background-color:none;
     margin:8px;
 }
 
+.highlighted {
+	background-color:#fff;
+	margin:16px;
+}

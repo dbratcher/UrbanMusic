@@ -19,7 +19,7 @@ var urbanmusic = {
                 minVelocity:0.3,
                 axis: "x"
             },
-            bounce:1
+            bounce:0
             });
         scrollView.render();
     
@@ -50,7 +50,8 @@ var urbanmusic = {
                 minDistance:10,
                 minVelocity:0.3,
                 axis: "x"
-            }
+            },
+            bounce:0
         });
         scrollView.render();
     
@@ -80,26 +81,27 @@ var urbanmusic = {
                 minDistance:10,
                 minVelocity:0.3,
                 axis: "x"
-            }
+            },
+            bounce:0
         });
         scrollView.render();
     
     
         scrollView.on("scrollXChange",function(event){
-        	setTimeout(function(){
             var ev = event.originalEvent;
         	var value=event.newVal;
         	var main_x=$("#pop-list").offset().left+120;
     		$("#pop-list").children().each(function(index, ele){
     			var x = $(this).offset().left;
     			var width = $(this).width();
+    			$(this).removeClass("highlighted");
     			if((value > x-main_x)&&(value<(x-main_x+width))){
+    				$(this).addClass("highlighted");
     				console.log($(this).html());
     				$("#pop-list").val($(this).html());
     			}
     		});
     		$("#scrollview-popcontent").val(value);
-    		},500);
         });
     
     
