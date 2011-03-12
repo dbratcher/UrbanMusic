@@ -23,6 +23,13 @@
     }); 
     scrollView.render();
 
+
+    $("#scrollview-yearcontent").bind("scrollEnd",function(event){
+        var ev = event.originalEvent;
+        console.log("FIRED");
+    });
+    
+
     var scrollView = new Y.ScrollView({
         id:"scrollview",
         srcNode: '#scrollview-genrecontent',
