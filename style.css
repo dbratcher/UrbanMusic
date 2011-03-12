@@ -28,3 +28,38 @@ html, body{
 #randomize{
     height: 100%;
 }
+
+.yui3-js-enabled .yui3-scrollview-loading {
+    visibility:hidden;
+}
+
+#scrollview-yearcontent {
+    white-space:nowrap;
+}
+ 
+#scrollview-yearcontent li {
+    display:inline-block;
+    background-color:#fff;
+    margin:8px;
+}
+
+#scrollview-genrecontent {
+    white-space:nowrap;
+}
+
+#scrollview-genrecontent li {
+    display:inline-block;
+    background-color:#fff;
+    margin:8px;
+}
+
+#scrollview-popcontent {
+    white-space:nowrap;
+}
+
+#scrollview-popcontent li {
+    display:inline-block;
+    background-color:#fff;
+    margin:8px;
+}
+

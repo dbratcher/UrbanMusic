@@ -11,19 +11,42 @@
     <script src="frontend.js"></script>
     <script src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js" charset="utf-8"></script>    
     <script type="application/javascript">YUI().use('scrollview', function(Y) {
- 
     var scrollView = new Y.ScrollView({
         id:"scrollview",
-        srcNode: '#scrollview-content',
-        height: 310,
+        srcNode: '#scrollview-yearcontent',
+	width: 200,
         flick: {
             minDistance:10,
             minVelocity:0.3,
-            axis: "y"
+            axis: "x"
+        }
+    }); 
+    scrollView.render();
+
+    var scrollView = new Y.ScrollView({
+        id:"scrollview",
+        srcNode: '#scrollview-genrecontent',
+        width: 200,
+        flick: {
+            minDistance:10,
+            minVelocity:0.3,
+            axis: "x"
         }
     });
- 
     scrollView.render();
+
+    var scrollView = new Y.ScrollView({
+        id:"scrollview",
+        srcNode: '#scrollview-popcontent',
+        width: 200,
+        flick: {
+            minDistance:10,
+            minVelocity:0.3,
+            axis: "x"
+        }
+    });
+    scrollView.render();
+
 });</script>
 </head>
 <body id="index" class="home">
@@ -31,33 +54,28 @@
     <div data-role="header">
        Urban Music
     </div>
-	<div id="scrollview-content" class="yui3-scrollview-loading">
-    <ul>
-        <li>AC/DC</li>
-        <li>Aerosmith</li>
-        <li>Billy Joel</li>
-        <li>Bob Dylan</li>
-    </ul>
-</div>
     <div data-role="content">
         <div class="selectors">
            <div class="year-selector">
                 <div>Year</div>
-                <ul id="year-list">
-                    
-                </ul>
+		<div id="scrollview-yearcontent" class="yui3-scrollview-loading">		
+                	<ul id="year-list">                   
+                	</ul>
+		</div>
            </div>
            <div class="genre-selector">
                <div>Genre</div>
-               <ul id="genre-list">
-               
-               </ul>
+               	<div id="scrollview-genrecontent" class="yui3-scrollview-loading">
+			<ul id="genre-list">
+	               </ul>
+		</div>
            </div>
-           <div class="hacku-selector">
-               <div>Something else</div>
-               <ul id="hacku-list">
-               
-               </ul>
+           <div class="pop-selector">
+               <div>Popularity</div>
+		<div id="scrollview-popcontent" class="yui3-scrollview-loading">
+			<ul id="pop-list">
+               		</ul>
+		</div>
            </div>
         </div>
      </div>

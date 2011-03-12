@@ -25,7 +25,17 @@ var urbanmusic = {
             urbanmusic.addToList(data,list);
           }
         });
-        
+      
+	$.ajax({
+          url: "pop.json",
+          dataType: "json",
+          success: function(data){
+            var list = $("#pop-list");
+            urbanmusic.addToList(data,list);
+          }
+        });
+
+  
         $(".listen-button").bind("touch click",
             urbanmusic.listen);
         $(".listen-button").bind("touch click",
@@ -45,6 +55,7 @@ var urbanmusic = {
         var data = {};
         data.genre = $("#genre-list").val();
         data.years = $("#years-list").val();
+	data.pop = $("#pop-list").val();
         
         $.ajax({
           url: "listen",
