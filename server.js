@@ -32,7 +32,7 @@ http.createServer(function(request, response) {
     		    console.log("err sending file");
     		    var contenttype = "text/plain";
     		    if (filename.match(/\.js$/)){
-    		      contenttype = "text/javascript"; 
+    		      contenttype = "application/javascript"; 
     		    }
     			response.writeHead(500, {"Content-Type": contenttype});
     			response.write("filename: "+filename+"\n");
