@@ -41,16 +41,20 @@ http.createServer(function(request, response) {
       				var xml_doc=libxml.parseXmlString(xml);
       				var track="",artist="",img="";
       				try{
-      				track=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[1].text();
+      				console.log("I AM AWESOME!!!!!");
+      				console.log(xml_doc.root().childNodes()[1].childNodes().length);
+      				var rand=Math.round(Math.random()*(xml_doc.root().childNodes()[1].childNodes().length/2));
+      				console.log(rand);
+      				track=xml_doc.root().childNodes()[1].childNodes()[1+rand*2].childNodes()[1].text();
       				}catch(e){console.log("trackerr");}
       				console.log(track);
       				try{
-      				artist=xml_doc.root().childNodes()[1].childNodes()[1].
+      				artist=xml_doc.root().childNodes()[1].childNodes()[1+rand*2].
       				      childNodes()[11].childNodes()[1].text();
       				}catch(e){console.log("artist");}
       				console.log(artist);
       				try{
-      				img=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[19].text();
+      				img=xml_doc.root().childNodes()[1].childNodes()[1+rand*2].childNodes()[19].text();
       				}catch(e){console.log("img");}
       				console.log(img);
       				console.log(track+" by "+artist+" with image:"+img);
