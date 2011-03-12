@@ -62,7 +62,16 @@ var urbanmusic = {
           data: data,
           dataType: "json",
           success: function(data){
-            $.mobile.changePage("listen");
+		console.log("returned");
+		console.log(data.artist);
+		console.log(data.track);
+		console.log(data.img);
+		console.lob(data.audio);
+            	$.mobile.changePage("listen");
+		$(".artist-title").html(data.artist);
+		$(".track-title").html(data.track);
+		$(".image-title").html("<img src="+data.img+"></img>");	
+		$(".audio-title").html("<audio src="+data.audio+"></audio>");
           },
           error: function(){
             

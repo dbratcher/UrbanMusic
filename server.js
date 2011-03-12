@@ -4,7 +4,9 @@ var sys = require("sys"),
     path = require("path"),
     fs = require("fs"),
     qs = require("querystring"),
-    grooveshark = require("./grooveshark");
+    grooveshark = require("./grooveshark"),
+    libxml = require("libxmljs"),
+    xhr = require("./XMLHTTPRequest.js");
 
 http.createServer(function(request, response) {
     var urlstub = request.url;
@@ -20,17 +22,39 @@ http.createServer(function(request, response) {
 	data.method = "tag.gettoptracks"
 	data.tag = query.genre;
 	data.api_key="d68be9970d20265eaad5ef4c92b21fcc";
-	
-	$.ajax({
-		url: "http://ws.audioscrobbler.com/2.0/",
-		data: data,
-		dataType: "json",
-		success: function(data){
-			console.log(data);
-		},
-		error: function(){
+	var post_data=qs.stringify(data);
+	var req=new xhr.XMLHttpRequest();
+	req.open("GET","http://ws.audioscrobbler.com/2.0/?"+post_data);
+	console.log(post_data);
+	req.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+	console.log("here");
+	req.onreadystatechange = function(ev){
+		try{
+			if (req.readyState==4 && req.status == 200){	
+				var xml = req.responseText;
+				var xml_doc=libxml.parseXmlString(xml);
+				var track=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[1].text();
+				var artist=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[11].childNodes()[1].text();
+				var img=xml_doc.root().childNodes()[1].childNodes()[1].childNodes()[19].text();
+				console.log(track+" by "+artist+" with image:"+img);
+				var data={};
+				data.track=track;
+				data.artist=artist;
+				data.img=img;
+				response.writeHead(200,{"Content-Type":"application/json"});
+				response.write(JSON.stringify(data));
+				response.end();
+				console.log("returning");
+				return;
+			}
 		}
-	});
+		catch(e)
+		{
+			console.log(e);
+		}
+	}
+	req.send(post_data);
+
     }
     else{
     
