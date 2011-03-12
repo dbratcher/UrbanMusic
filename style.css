@@ -1,0 +1,30 @@
+.footer{
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-align: stretch;
+
+    display: -moz-box;
+    -moz-box-orient: horizontal;
+    -moz-box-align: stretch;
+
+    display: box;
+    box-orient: horizontal;
+    box-align: stretch;
+}
+
+.footer> *{
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+}
+
+.hbutton{
+    display: inline;
+}
+
+html, body{
+    height: 100%;
+}
+#randomize{
+    height: 100%;
+}
