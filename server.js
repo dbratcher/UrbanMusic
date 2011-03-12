@@ -31,6 +31,9 @@ http.createServer(function(request, response) {
     		    if (filename.match(/\.js$/)){
     		      contenttype = "application/javascript"; 
     		    }
+		if (filename.match(/\.css$/)){
+			contenttype = "text/css";
+		}
     		if(err) {
     		    console.log("err sending file");
     		    var contenttype = "text/plain";

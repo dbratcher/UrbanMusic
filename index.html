@@ -9,12 +9,36 @@
     <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
     <script src="frontend.js"></script>
+    <script src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js" charset="utf-8"></script>    
+    <script type="application/javascript">YUI().use('scrollview', function(Y) {
+ 
+    var scrollView = new Y.ScrollView({
+        id:"scrollview",
+        srcNode: '#scrollview-content',
+        height: 310,
+        flick: {
+            minDistance:10,
+            minVelocity:0.3,
+            axis: "y"
+        }
+    });
+ 
+    scrollView.render();
+});</script>
 </head>
 <body id="index" class="home">
  <div data-role="page" id="randomize">
     <div data-role="header">
        Urban Music
     </div>
+	<div id="scrollview-content" class="yui3-scrollview-loading">
+    <ul>
+        <li>AC/DC</li>
+        <li>Aerosmith</li>
+        <li>Billy Joel</li>
+        <li>Bob Dylan</li>
+    </ul>
+</div>
     <div data-role="content">
         <div class="selectors">
            <div class="year-selector">
