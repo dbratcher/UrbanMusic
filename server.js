@@ -28,12 +28,12 @@ http.createServer(function(request, response) {
 
     	fs.readFile(filename, "binary", function(err, file) {
       	    console.log("file exists");
+    		    if (filename.match(/\.js$/)){
+    		      contenttype = "application/javascript"; 
+    		    }
     		if(err) {
     		    console.log("err sending file");
     		    var contenttype = "text/plain";
-    		    if (filename.match(/\.js$/)){
-    		      contenttype = "application/x-javascript"; 
-    		    }
     			response.writeHead(500, {"Content-Type": contenttype});
     			response.write("filename: "+filename+"\n");
     			response.write(err + "\n");
