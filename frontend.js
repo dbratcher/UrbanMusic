@@ -1,11 +1,9 @@
 var urbanmusic = {
     addToList: function addToList(data,list){
        console.log("add to list");
-       list.append("<li>&nbsp</li>");
        for (var i=0;i<data.length;i++){
            list.append("<li>"+data[i]+"</li>");   
        }
-       list.append("<li>&nbsp</li>");
        list.val(data[0]);
     },
     doload: function(){
@@ -21,7 +19,7 @@ var urbanmusic = {
                 minVelocity:0.3,
                 axis: "x"
             },
-            bounce:0
+            bounce:1
             });
         scrollView.render();
     
@@ -35,12 +33,12 @@ var urbanmusic = {
     			var x = $(this).offset().left;
     			var width = $(this).width();
     			if((value > x-main_x)&&(value<(x-main_x+width))){
-					console.log($(this).html());
+    				console.log($(this).html());
     				$("#year-list").val($(this).html());
     			}
     		});
     		$("#scrollview-yearcontent").val(value);
-    		},100);
+    		},500);
         });
         
     
@@ -52,8 +50,7 @@ var urbanmusic = {
                 minDistance:10,
                 minVelocity:0.3,
                 axis: "x"
-            },
-            bounce:0
+            }
         });
         scrollView.render();
     
@@ -71,7 +68,7 @@ var urbanmusic = {
     			}
     		});
     		$("#scrollview-genrecontent").val(value);
-    		},100);
+    		},500);
         });
         
         
@@ -83,13 +80,13 @@ var urbanmusic = {
                 minDistance:10,
                 minVelocity:0.3,
                 axis: "x"
-            },
-            bounce:0
+            }
         });
         scrollView.render();
     
     
         scrollView.on("scrollXChange",function(event){
+        	setTimeout(function(){
             var ev = event.originalEvent;
         	var value=event.newVal;
         	var main_x=$("#pop-list").offset().left+120;
@@ -102,6 +99,7 @@ var urbanmusic = {
     			}
     		});
     		$("#scrollview-popcontent").val(value);
+    		},500);
         });
     
     
@@ -146,6 +144,9 @@ var urbanmusic = {
         });
         $(".next-button").bind("click",function(){
            urbanmusic.listen();
+        });
+        $(".randomize-button").bind("click",function(){
+           urbanmusic.randomize();   
         });
         setTimeout(function(){
             if ($.mobile.activePage.attr("id")!="randomize")
