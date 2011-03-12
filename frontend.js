@@ -9,50 +9,102 @@ var urbanmusic = {
     doload: function(){
         
     	YUI().use('scrollview', function(Y) {
+
         var scrollView = new Y.ScrollView({
             id:"scrollview",
             srcNode: '#scrollview-yearcontent',
-       	    width: 200,
+    	width: 200,
             flick: {
-                   minDistance:10,
-                   minVelocity:0.3,
-                   axis: "x"
-               }
-           }); 
-           scrollView.render();
-       
-       
-           scrollView.on("scrollEnd",function(event){
-               var ev = event.originalEvent;
-               console.log("FIRED");
-           });
-           
-       
-           var scrollView = new Y.ScrollView({
-               id:"scrollview",
-               srcNode: '#scrollview-genrecontent',
-               width: 200,
-               flick: {
-                   minDistance:10,
-                   minVelocity:0.3,
-                   axis: "x"
-               }
-           });
-           scrollView.render();
-       
-           var scrollView = new Y.ScrollView({
-               id:"scrollview",
-               srcNode: '#scrollview-popcontent',
-               width: 200,
-               flick: {
-                   minDistance:10,
-                   minVelocity:0.3,
-                   axis: "x"
-               }
-           });
-           scrollView.render();
-       
+                minDistance:10,
+                minVelocity:0.3,
+                axis: "x"
+            },
+            bounce:1
+            });
+        scrollView.render();
+    
+    
+        scrollView.on("scrollXChange",function(event){
+        	setTimeout(function(){
+            var ev = event.originalEvent;
+        	var value=event.newVal;
+        	var main_x=$("#year-list").offset().left+120;
+    		$("#year-list").children().each(function(index, ele){
+    			var x = $(this).offset().left;
+    			var width = $(this).width();
+    			if((value > x-main_x)&&(value<(x-main_x+width))){
+    				console.log($(this).html());
+    				$("#year-list").val($(this).html());
+    			}
+    		});
+    		$("#scrollview-yearcontent").val(value);
+    		},500);
         });
+        
+    
+        var scrollView = new Y.ScrollView({
+            id:"scrollview",
+            srcNode: '#scrollview-genrecontent',
+            width: 200,
+            flick: {
+                minDistance:10,
+                minVelocity:0.3,
+                axis: "x"
+            }
+        });
+        scrollView.render();
+    
+        scrollView.on("scrollXChange",function(event){
+        	setTimeout(function(){
+            var ev = event.originalEvent;
+        	var value=event.newVal;
+        	var main_x=$("#genre-list").offset().left+120;
+    		$("#genre-list").children().each(function(index, ele){
+    			var x = $(this).offset().left;
+    			var width = $(this).width();
+    			if((value > x-main_x)&&(value<(x-main_x+width))){
+    				console.log($(this).html());
+    				$("#genre-list").val($(this).html());
+    			}
+    		});
+    		$("#scrollview-genrecontent").val(value);
+    		},500);
+        });
+        
+        
+        var scrollView = new Y.ScrollView({
+            id:"scrollview",
+            srcNode: '#scrollview-popcontent',
+            width: 200,
+            flick: {
+                minDistance:10,
+                minVelocity:0.3,
+                axis: "x"
+            }
+        });
+        scrollView.render();
+    
+    
+        scrollView.on("scrollXChange",function(event){
+        	setTimeout(function(){
+            var ev = event.originalEvent;
+        	var value=event.newVal;
+        	var main_x=$("#pop-list").offset().left+120;
+    		$("#pop-list").children().each(function(index, ele){
+    			var x = $(this).offset().left;
+    			var width = $(this).width();
+    			if((value > x-main_x)&&(value<(x-main_x+width))){
+    				console.log($(this).html());
+    				$("#pop-list").val($(this).html());
+    			}
+    		});
+    		$("#scrollview-popcontent").val(value);
+    		},500);
+        });
+    
+    
+        });
+
         console.log("doload");
         $.ajax({
           url: "years.json",
