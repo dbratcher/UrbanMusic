@@ -98,7 +98,8 @@ html, body{
 
 .highlighted {
 	background-color:#fff;
-	margin:16px;
+	margin:16px;	
+}
 
 .image-title{
     min-width: 300px;
