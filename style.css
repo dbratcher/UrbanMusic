@@ -7,6 +7,7 @@
 center {
     height: 100%;
 
+    
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-box-align: stretch;
@@ -18,6 +19,7 @@ center {
     display: box;
     box-orient: vertical;
     box-align: stretch;
+    
 }
 
 .ui-content{
@@ -105,4 +107,40 @@ html, body{
     max-width: 300px;
     min-height: 300px;
     max-height: 300px;
+}
+
+.selectors .scroller{
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    
+    border: 1px solid #222;
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#555),color-stop(1,#333));
+    background-image: -moz-linear-gradient(top,#555,#333);
+    
+    color: white;
+}
+.scroller{
+    height: 60px;
+    margin-top: 0;
+    padding-top: 0;
+    
+}
+
+/*#scrollview-genrecontent,*/
+#scrollview-genrecontent ul,
+/*#scrollview-yearcontent,*/
+#scrollview-yearcontent ul,
+/*#scrollview-popcontent,*/
+#scrollview-popcontent ul{
+    -webkit-margin-before: 1em;
+    -webkit-margin-before: 0em;
+    width: 100%;
+}
+.yui3-scrollview{
+    width: 100%;
+}
+.hbutton{
+    font-size: 1.3em;
+    width: 125px;
 }

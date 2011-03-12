@@ -15,30 +15,32 @@
  <div data-role="page" id="randomize">
     <center>
     <div data-role="header" class="header">
-    	Urban Music
+       Urban Music
     </div>
     <div data-role="content">
         <div class="selectors">
            <div class="year-selector">
-                <div><h4>Year</h4></div>
-		<div id="scrollview-yearcontent" class="yui3-scrollview-loading">		
+                <div>Year</div><div class="scroller">
+		<div id="scrollview-yearcontent" class="yui3-scrollview-loading ">		
                 	<ul id="year-list">                   
                 	</ul>
-		</div>
+		</div></div>
            </div>
            <div class="genre-selector">
-               <div><h4>Genre</h4></div>
-               	<div id="scrollview-genrecontent" class="yui3-scrollview-loading">
+               <div>Genre</div>
+               	<div class="scroller">
+               	<div id="scrollview-genrecontent" class="yui3-scrollview-loading " >
 			<ul id="genre-list">
 	               </ul>
-		</div>
+		</div></div>
            </div>
            <div class="pop-selector">
-               <div><h4>Popularity</h4></div>
+               <div>Popularity</div>
+               <div class="scroller">
 		<div id="scrollview-popcontent" class="yui3-scrollview-loading">
 			<ul id="pop-list">
                		</ul>
-		</div>
+		</div></div>
            </div>
         </div>
      </div>

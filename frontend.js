@@ -19,7 +19,7 @@ var urbanmusic = {
         var scrollView = new Y.ScrollView({
             id:"years-scrollview",
             srcNode: '#scrollview-yearcontent',
-    	width: 200,
+    	    width: 250,
             flick: {
                 minDistance:10,
                 minVelocity:0.3,
@@ -51,7 +51,7 @@ var urbanmusic = {
         scrollView = new Y.ScrollView({
             id:"genre-scrollview",
             srcNode: '#scrollview-genrecontent',
-            width: 200,
+            width: 250,
             flick: {
                 minDistance:10,
                 minVelocity:0.3,
@@ -82,7 +82,7 @@ var urbanmusic = {
         scrollView = new Y.ScrollView({
             id:"pop-scrollview",
             srcNode: '#scrollview-popcontent',
-            width: 200,
+            width: 250,
             flick: {
                 minDistance:10,
                 minVelocity:0.3,
@@ -175,7 +175,9 @@ var urbanmusic = {
            if ($(this).html()==val){
               console.log("yearscroll: "+urbanmusic.yearscroll);
               urbanmusic.yearscroll.scrollTo($(this).offset().left
-                -$("#year-scrollview"),0);
+                -$("#years-scrollview").offset().left,0);
+              console.log($(this).offset().left
+                -$("#years-scrollview").offset().left);
               return false;
            } 
         });
@@ -184,9 +186,11 @@ var urbanmusic = {
         $("#genre-list").val(val);
         $("#genre-list").children().each(function(idx){
            if ($(this).html()==val){
-
+              console.log(val);
               urbanmusic.genrescroll.scrollTo($(this).offset().left
                 -$("#genre-scrollview").offset().left,0);
+              console.log($(this).offset().left
+                -$("#genre-scrollview").offset().left);
               return false;
            } 
         });
@@ -195,8 +199,11 @@ var urbanmusic = {
         $("#pop-list").val(val);
         $("#pop-list").children().each(function(idx){
            if ($(this).html()==val){
+              console.log("p: "+val);
               urbanmusic.popscroll.scrollTo($(this).offset().left
-                -$("#pop-scrollview"),0);
+                -$("#pop-scrollview").offset().left,0);
+              console.log($(this).offset().left
+                -$("#pop-scrollview").offset().left);
               return false;
            } 
         });
