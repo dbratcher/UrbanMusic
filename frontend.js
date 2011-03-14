@@ -160,6 +160,7 @@ var urbanmusic = {
         });
         $("#audio-ele").bind("ended",function(){
            console.log("ended"); 
+           urbanmusic.listen();
         });
         setTimeout(function(){
             if ($.mobile.activePage.attr("id")!="randomize")
