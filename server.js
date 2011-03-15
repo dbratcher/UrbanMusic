@@ -6,12 +6,51 @@ var sys = require("sys"),
     qs = require("querystring"),
     playlist = require("./playlist"),
     libxml = require("libxmljs"),
-    xhr = require("./XMLHTTPRequest.js");;
-
+    lastfm = require("./lastfm"),
+    xhr = require("./XMLHTTPRequest.js"),
+    grooveshark = require("./grooveshark.js");
+    
+grooveshark.groove.init();
+setTimeout(function(){
+        grooveshark.groove.getCommunicationToken(function(){
+           console.log("found com token: "+grooveshark.groove.currentToken); 
+           grooveshark.groove.getMP3("lady gaga pokerface", function(url){
+              console.log("url: "+url);
+           });
+        });
+},1000);
 //grooveshark.groove.getMP3("lady gaga");
 //playlist.playlist.search("lady");
 
+function handleListen(response,query){
+    
+	console.log("Handling listen stuff");
+	
+	lastfm.service.findSong(query,function(songinfo){
+	   console.log("lastfm returned: "+songinfo.track+" - "+songinfo.artist);
+	     
 
+	   playlist.playlist.getMP3(songinfo.track+" "+songinfo.artist, function(url){
+	       songinfo.audio = url;
+	       if (url){
+    	       response.writeHead(200,{"Content-Type":"application/json"});
+    	       response.write(JSON.stringify(songinfo));
+    	       response.end();
+	       } else {
+	           	 grooveshark.groove.getMP3(songinfo.track+" "+songinfo.artist, function(song){
+                    console.log("Gurl: "+song.songURL);
+                    songinfo.audio = song.songURL;
+                    response.writeHead(200,{"Content-Type":"application/json"});
+                    response.write(JSON.stringify(songinfo));
+                    response.end();
+                    setTimeout(function(){
+                        grooveshark.groove.markSongDownloaded(song.streamServer,song.id,song.streamKey);
+                    },3000);
+                });       
+	       }
+	   }); 
+	});
+}
 
 http.createServer(function(request, response) {
     var urlstub = request.url;
@@ -21,67 +60,7 @@ http.createServer(function(request, response) {
     var uri = url.parse(urlstub).pathname;
     console.log("uri: "+uri);
     if(uri=="/listen"){
-      	var query=qs.parse(urlstub.substring(uri.length+1));
-      	console.log("Handling listen stuff");
-      	var data = {};
-      	data.method = "tag.gettoptracks"
-      	data.tag = query.genre;
-      	data.api_key="d68be9970d20265eaad5ef4c92b21fcc";
-      	var post_data=qs.stringify(data);
-      	var req=new xhr.XMLHttpRequest();
-      	req.open("GET","http://ws.audioscrobbler.com/2.0/?"+post_data);
-      	console.log(post_data);
-      	req.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
-      	console.log("here");
-      	req.onreadystatechange = function(ev){
-      		try{
-      			if (req.readyState==4 && req.status == 200){	
-      				var xml = req.responseText;
-      				//console.log("xml: "+xml);
-      				var xml_doc=libxml.parseXmlString(xml);
-      				var track="",artist="",img="";
-      				try{
-      				console.log("I AM AWESOME!!!!!");
-      				console.log(xml_doc.root().childNodes()[1].childNodes().length);
-      				var rand=Math.round(Math.random()*(xml_doc.root().childNodes()[1].childNodes().length/2));
-      				console.log(rand);
-      				track=xml_doc.root().childNodes()[1].childNodes()[1+rand*2].childNodes()[1].text();
-      				}catch(e){console.log("trackerr");}
-      				console.log(track);
-      				try{
-      				artist=xml_doc.root().childNodes()[1].childNodes()[1+rand*2].
-      				      childNodes()[11].childNodes()[1].text();
-      				}catch(e){console.log("artist");}
-      				console.log(artist);
-      				try{
-      				img=xml_doc.root().childNodes()[1].childNodes()[1+rand*2].childNodes()[19].text();
-      				}catch(e){console.log("img");}
-      				console.log(img);
-      				console.log(track+" by "+artist+" with image:"+img);
-      				
-      				playlist.playlist.getMP3(track+" "+artist, function(url){
-                        var data={};
-        				data.track=track;
-        				data.artist=artist;
-        				data.img=img;
-        				data.audio=url;
-        				response.writeHead(200,{"Content-Type":"application/json"});
-        				response.write(JSON.stringify(data));
-        				response.end();
-        				console.log("returning");
-                    });
-      				
-      				
-      				return;
-      			}
-      		}
-      		catch(e)
-      		{
-      			console.log(e);
-      		}
-      	}
-      	req.send(post_data);
-
+      	handleListen(response, qs.parse(urlstub.substring(uri.length+1)));
     }
     else{
     
