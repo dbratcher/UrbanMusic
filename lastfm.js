@@ -33,7 +33,8 @@ var lastfm = {
       				  lfm.datainfo.tag[data.tag].total = songinfo.total;
       				  delete songinfo.total;  
       				  console.log("total for "+data.tag+" is "+lfm.datainfo.tag[data.tag].total);
-      				  callback(songinfo);
+      				  songinfo.index = songinfo.index+lfm.perpage*data.page;
+                      callback(songinfo);
       				});
       				
       				var filename = path.join(process.cwd(), "lastfm");
@@ -57,6 +58,27 @@ var lastfm = {
       	}
       	req.send();   
     },
+    readFromFile: function(path,data, callback){
+        var lfm = this;
+        fs.readFile(path, function(err, txtdata){
+            if (err) {
+              console.log("error reading local xml file");
+              lfm.requestURL(data,callback);
+            } else {
+              console.log("read from file!");
+              lfm.handleXML(""+txtdata,function(songinfo){
+                  if (!lfm.datainfo.tag[data.tag])
+                      lfm.datainfo.tag[data.tag] = {total: 1};
+                  lfm.datainfo.tag[data.tag].total = songinfo.total;
+                  delete songinfo.total;  
+                  console.log("total for "+data.tag+" is "+
+                          lfm.datainfo.tag[data.tag].total);
+                  songinfo.index = songinfo.index+lfm.perpage*data.page;
+                  callback(songinfo);
+              });
+            }
+        });
+    },  
     handleXML: function(xml,callback){
         var xml_doc=libxml.parseXmlString(xml);
       	var track="",artist="",img="";
@@ -67,6 +89,8 @@ var lastfm = {
       	var total = xml_doc.root().childNodes()[1].attr("total").value();
 
       	console.log("total tracks: "+total);
+        
+        
       	track=xml_doc.root().childNodes()[1].childNodes()[1+rand*2].childNodes()[1].text();
       	}catch(e){console.log("trackerr: "+e);}
       	console.log(track);
@@ -85,6 +109,7 @@ var lastfm = {
       	  track: track,
       	  artist: artist,
       	  img: img,
+          index: rand,
           total: total
       	}
       	callback(sinfo);
@@ -96,6 +121,7 @@ var lastfm = {
       	data.api_key=this.apikey;
       	if (this.datainfo.tag[data.tag]){
       	    var pages = Math.ceil(this.datainfo.tag[data.tag].total/this.perpage); 
+            pages=pages>2?2:pages;
       	    data.page = Math.floor(Math.random()*pages);
       	    console.log("page: "+data.page +" / "+pages);
       	} else {
@@ -107,25 +133,9 @@ var lastfm = {
         path.exists(xmlpath,function(exists){
             console.log("xmlpath exists? :"+exists);
             if (exists){
-                fs.readFile(xmlpath, function(err, txtdata){
-                  if (err) {
-                    console.log("error reading local xml file");
-                    lfm.requestURL(data,callback);
-                  } else {
-                      console.log("read from file!");
-                      lfm.handleXML(""+txtdata,function(songinfo){
-          				  if (!lfm.datainfo.tag[data.tag])
-          				      lfm.datainfo.tag[data.tag] = {total: 1};
-          				  lfm.datainfo.tag[data.tag].total = songinfo.total;
-          				  delete songinfo.total;  
-          				  console.log("total for "+data.tag+" is "+
-          				          lfm.datainfo.tag[data.tag].total);
-          				  callback(songinfo);
-          			  });
-                  }
-                });
+                lfm.readFromFile(xmlpath, data, callback);
             } else {
-                lfm.requestURL(data,callback);
+                lfm.requestURL(data, callback);
             }
         });
       	

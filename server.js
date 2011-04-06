@@ -14,9 +14,9 @@ grooveshark.groove.init();
 setTimeout(function(){
         grooveshark.groove.getCommunicationToken(function(){
            console.log("found com token: "+grooveshark.groove.currentToken); 
-           grooveshark.groove.getMP3("lady gaga pokerface", function(url){
-              console.log("url: "+url);
-           });
+           //grooveshark.groove.getMP3("lady gaga pokerface", function(url){
+           //   console.log("url: "+url);
+           //});
         });
 },1000);
 //grooveshark.groove.getMP3("lady gaga");
@@ -28,7 +28,7 @@ function handleListen(response,query){
 	
 	lastfm.service.findSong(query,function(songinfo){
 	   console.log("lastfm returned: "+songinfo.track+" - "+songinfo.artist);
-	     
+       console.log("index: "+songinfo.index);
 
 	   playlist.playlist.getMP3(songinfo.track+" "+songinfo.artist, function(url){
 	       songinfo.audio = url;

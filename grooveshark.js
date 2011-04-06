@@ -58,7 +58,8 @@ var grooveshark = {
                  }
               }
            } else {
-              grooveshark.session = "7177bdaca3be9a662da1f3ba890e7419";
+              grooveshark.session = "b4419bd0b4b51b09f3a70e5a3b648260";
+              //"7177bdaca3be9a662da1f3ba890e7419";
            }
            }catch(e){
                 console.log(e);

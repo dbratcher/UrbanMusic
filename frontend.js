@@ -239,6 +239,7 @@ var urbanmusic = {
         		console.log(data.track);
         		console.log(data.img);
         		console.log(data.audio);
+                console.log(data.index);
         		if (!data.audio){
         		  urbanmusic.listen(); 
         		} else {
